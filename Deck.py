@@ -27,7 +27,6 @@ class Deck:
         self._check_validity()
         
     def _check_validity(self) -> bool:
-        CHARACTERS = ["日野下花帆", "林野さやか", "大沢瑠璃乃", "乙宗梢", "夕霧綴理", "藤島慈"]
         deck_characters = []
         
         for card in self.cards:
