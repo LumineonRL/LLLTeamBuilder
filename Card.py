@@ -7,29 +7,31 @@ class Card:
         name: str,
         character: str,
         rarity: str,
-        smile: int,
-        pure: int,
-        cool: int,
-        mental: int,
-        bp: int,
-        type: str,
-        mood: str,
-        level: int = 1,
-        uncaps: int = 1,
-        appeal_level: int = 1,
-        skill_level: int = 1,
+        stats_dict: dict,
+        mood_dict: dict,
+        training_dict: dict,
     ) -> None:
         self.name = name
         self.character = character
         self.rarity = rarity
-        self.stats = self.Stats(smile, pure, cool, mental, bp)
-        self.mood = self.Mood(type, mood)
-        self.training = self.Training(level, uncaps, appeal_level, skill_level)
+        self.stats = self.Stats(**stats_dict)
+        self.mood = self.Mood(**mood_dict)
+        self.training = self.Training(**training_dict)
 
     class Stats:
         def __init__(
-            self, smile: int, pure: int, cool: int, mental: int, bp: int
+            self,
+            smile: int = 0,
+            pure: int = 0,
+            cool: int = 0,
+            mental: int = 0,
+            bp: int = 0,
         ) -> None:
+            if not all(
+                isinstance(x, int) and x >= 0 for x in [smile, pure, cool, mental, bp]
+            ):
+                raise ValueError("Stat parameters should be non-negative integers")
+
             self.smile = smile
             self.pure = pure
             self.cool = cool
@@ -37,12 +39,30 @@ class Card:
             self.bp = bp
 
     class Mood:
-        def __init__(self, type: str, mood: str) -> None:
-            self.type = type
+        def __init__(self, style_type: str = "パフォーマー", mood: str = "ハッピー") -> None:
+            self.style_type = style_type
             self.mood = mood
 
     class Training:
-        def __init__(self, level, uncaps, appeal_level, skill_level):
+        def __init__(
+            self,
+            level: int = 1,
+            uncaps: int = 0,
+            appeal_level: int = 1,
+            skill_level: int = 1,
+        ) -> None:
+            # TODO - Break into seperate methods for each parameter.
+            # Will probably make skill into a separate class once I understand this better,
+            # so I'm holding off for now.
+            if not all(
+                isinstance(x, int) and x >= 1
+                for x in [level, appeal_level, skill_level]
+            ):
+                raise ValueError("Stat parameters should be non-negative integers")
+
+            if not all(isinstance(x, int) and x >= 0 and x <= 5 for x in [uncaps]):
+                raise ValueError("Stat parameters should be non-negative integers")
+
             self.level = level
             self.uncaps = uncaps
             self.appeal_level = appeal_level
@@ -81,35 +101,27 @@ class MyCards:
 
             data.append(card_dict)
 
-        with open(filename, "w") as f_out:
-            json.dump(data, f_out, default=lambda x: x.__dict__)
+        with open(filename, "w", encoding="utf-8") as write_card_file:
+            json.dump(data, write_card_file, default=lambda x: x.__dict__)
 
     def import_cards(self, filename: str) -> None:
-        with open(filename, "r") as f_in:
-            file = json.load(f_in)
+        with open(filename, "r", encoding="utf-8") as read_card_file:
+            file = json.load(read_card_file)
 
         cards = []
 
-        for data in file:
-            stats = data["stats"]
-            mood = data["mood"]
-            training = data["training"]
-            card = Card(
-                data["name"],
-                data["character"],
-                data["rarity"],
-                stats["smile"],
-                stats["pure"],
-                stats["cool"],
-                stats["mental"],
-                stats["bp"],
-                mood["type"],
-                mood["mood"],
-                training["level"],
-                training["uncaps"],
-                training["appeal_level"],
-                training["skill_level"],
-            )
-            cards.append(card)
+        for item in file:
+            stats_attr = item["stats"]
+            mood_attr = item["mood"]
+            training_attr = item["training"]
 
-        self.cards = cards
+            card = Card(
+                name=item["name"],
+                character=item["character"],
+                rarity=item["rarity"],
+                stats_dict=stats_attr,
+                mood_dict=mood_attr,
+                training_dict=training_attr,
+            )
+
+            cards.append(card)
