@@ -1,72 +1,65 @@
 import json
+from dataclasses import dataclass
 
 
+@dataclass
 class Card:
-    def __init__(
-        self,
-        name: str,
-        character: str,
-        rarity: str,
-        stats_dict: dict,
-        mood_dict: dict,
-        training_dict: dict,
-    ) -> None:
-        self.name = name
-        self.character = character
-        self.rarity = rarity
-        self.stats = self.Stats(**stats_dict)
-        self.mood = self.Mood(**mood_dict)
-        self.training = self.Training(**training_dict)
+    name: str
+    character: str
+    rarity: str
+    stats_dict: dict
+    mood_dict: dict
+    training_dict: dict
 
+    @dataclass
     class Stats:
-        def __init__(
-            self,
-            smile: int = 0,
-            pure: int = 0,
-            cool: int = 0,
-            mental: int = 0,
-            bp: int = 0,
-        ) -> None:
+        smile: int = 0
+        pure: int = 0
+        cool: int = 0
+        mental: int = 0
+        bp: int = 0
+
+        def __post_init__(self):
             if not all(
-                isinstance(x, int) and x >= 0 for x in [smile, pure, cool, mental, bp]
+                self._is_non_negative_int(x)
+                for x in [self.smile, self.pure, self.cool, self.mental, self.bp]
             ):
                 raise ValueError("Stat parameters should be non-negative integers")
 
-            self.smile = smile
-            self.pure = pure
-            self.cool = cool
-            self.mental = mental
-            self.bp = bp
+        @staticmethod
+        def _is_non_negative_int(val):
+            return isinstance(val, int) and val >= 1
 
+    @dataclass
     class Mood:
-        def __init__(self, style_type: str = "パフォーマー", mood: str = "ハッピー") -> None:
-            self.style_type = style_type
-            self.mood = mood
+        style_type: str = "パフォーマー"
+        mood: str = "ハッピー"
 
+    @dataclass
     class Training:
-        def __init__(
-            self,
-            level: int = 1,
-            uncaps: int = 0,
-            appeal_level: int = 1,
-            skill_level: int = 1,
-        ) -> None:
-            # TODO - Break into seperate methods for each parameter.
-            # Will probably make skill into a separate class once I understand this better,
-            # so I'm holding off for now.
-            if not all(
-                isinstance(x, int) and x >= 1
-                for x in [level, appeal_level, skill_level]
-            ):
-                raise ValueError("Stat parameters should be non-negative integers")
+        level: int = 1
+        uncaps: int = 0
+        appeal_level: int = 1
+        skill_level: int = 1
 
-            if not all(isinstance(x, int) and x >= 0 and x <= 5 for x in [uncaps]):
-                raise ValueError("Stat parameters should be non-negative integers")
+        if not all(
+            isinstance(x, int) and x >= 1 for x in [level, appeal_level, skill_level]
+        ):
+            raise ValueError("Level parameters should be non-negative integers")
 
-            self.level = level
-            self.uncaps = uncaps
-            self.appeal_level = appeal_level
-            self.skill_level = skill_level
+        if not all(isinstance(x, int) and x >= 0 and x <= 5 for x in [uncaps]):
+            raise ValueError("Stat parameters should be non-negative integers")
+
+    def __post_init__(self):
+        # Creating an instance of Stats class from stats dictionary
+        stats_instance = self.Stats(**self.stats_dict)
+        mood_instance = self.Mood(**self.mood_dict)
+        training_instance = self.Training(**self.training_dict)
+
+        # Assigning the created instance to attribute 'stats'
+        setattr(self, "stats", stats_instance)
+        setattr(self, "mood", mood_instance)
+        setattr(self, "training", training_instance)
 
 
 class MyCards:
