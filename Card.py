@@ -1,120 +1,188 @@
-import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
+from typing import List
+from collections import Counter
 
 
 @dataclass
-class Card:
-    name: str
-    character: str
-    rarity: str
-    stats_dict: dict
-    mood_dict: dict
-    training_dict: dict
-
-    @dataclass
-    class Stats:
-        smile: int = 0
-        pure: int = 0
-        cool: int = 0
-        mental: int = 0
-        bp: int = 0
-
-        def __post_init__(self):
-            if not all(
-                self._is_non_negative_int(x)
-                for x in [self.smile, self.pure, self.cool, self.mental, self.bp]
-            ):
-                raise ValueError("Stat parameters should be non-negative integers")
-
-        @staticmethod
-        def _is_non_negative_int(val):
-            return isinstance(val, int) and val >= 1
-
-    @dataclass
-    class Mood:
-        style_type: str = "パフォーマー"
-        mood: str = "ハッピー"
-
-    @dataclass
-    class Training:
-        level: int = 1
-        uncaps: int = 0
-        appeal_level: int = 1
-        skill_level: int = 1
-
-        if not all(
-            isinstance(x, int) and x >= 1 for x in [level, appeal_level, skill_level]
-        ):
-            raise ValueError("Level parameters should be non-negative integers")
-
-        if not all(isinstance(x, int) and x >= 0 and x <= 5 for x in [uncaps]):
-            raise ValueError("Stat parameters should be non-negative integers")
-
-    def __post_init__(self):
-        # Creating an instance of Stats class from stats dictionary
-        stats_instance = self.Stats(**self.stats_dict)
-        mood_instance = self.Mood(**self.mood_dict)
-        training_instance = self.Training(**self.training_dict)
-
-        # Assigning the created instance to attribute 'stats'
-        setattr(self, "stats", stats_instance)
-        setattr(self, "mood", mood_instance)
-        setattr(self, "training", training_instance)
+class Stats:
+    smile: int = 0
+    pure: int = 0
+    cool: int = 0
+    mental: int = 0
+    bp: int = 0
 
 
-class MyCards:
-    def __init__(self) -> None:
-        self.cards = []
+@dataclass
+class Mood:
+    style_type: str = "パフォーマー"
+    mood: str = "ハッピー"
+
+
+@dataclass
+class Training:
+    level: int = 1
+    uncaps: int = 0
+    appeal_level: int = 1
+    skill_level: int = 1
+
+
+@dataclass
+class Card(Stats, Mood, Training):
+    name: str = ""
+    character: str = ""
+    rarity: str = ""
+    
+
+@dataclass(order=True, frozen=False)
+class Deck(ABC):
+    cards: List[Card]
+
+    @abstractmethod
+    def add_card(self, card: Card) -> None:
+        pass
+
+    @abstractmethod
+    def remove_card(self, card: Card) -> None:
+        pass
+
+def _default_cards() -> List[Card]:
+    return [
+        Card(
+            "オーロラスカイ",
+            "日野下花帆",
+            "R",
+            smile=1225,
+            pure=1525,
+            cool=925,
+            mental=123,
+            bp=100,
+            style_type="パフォーマー",
+            mood="ハッピー",
+        ),
+        Card(
+            "オーロラスカイ",
+            "林野さやか",
+            "R",
+            smile=1225,
+            pure=1025,
+            cool=1425,
+            mental=123,
+            bp=100,
+            style_type="ムードメーカー",
+            mood="メロウ",
+        ),
+        Card(
+            "オーロラスカイ",
+            "大沢瑠璃乃",
+            "R",
+            smile=1525,
+            pure=1125,
+            cool=725,
+            mental=153,
+            bp=100,
+            style_type="トリックスター",
+            mood="ニュートラル",
+        ),
+        Card(
+            "オーロラスカイ",
+            "乙宗梢",
+            "R",
+            smile=1525,
+            pure=1225,
+            cool=925,
+            mental=123,
+            bp=100,
+            style_type="チアリーダー",
+            mood="ハッピー",
+        ),
+        Card(
+            "オーロラスカイ",
+            "夕霧綴理",
+            "R",
+            smile=1225,
+            pure=925,
+            cool=1525,
+            mental=123,
+            bp=100,
+            style_type="ムードメーカー",
+            mood="メロウ",
+        ),
+        Card(
+            "オーロラスカイ",
+            "藤島慈",
+            "R",
+            smile=1125,
+            pure=1525,
+            cool=925,
+            mental=133,
+            bp=100,
+            style_type="チアリーダー",
+            mood="ニュートラル",
+        )
+    ]
+    
+@dataclass(frozen=False)
+class InitialDeck(Deck):
+    cards: List[Card] = field(default_factory=_default_cards)
+
+    @abstractmethod
+    def add_card(self, card: Card) -> None:
+        pass
+
+    @abstractmethod
+    def remove_card(self, card: Card) -> None:
+        pass
+
+def _default_character_names() -> List[str]:
+    return ["日野下花帆", "林野さやか", "大沢瑠璃乃", "乙宗梢", "夕霧綴理", "藤島慈"]
+
+@dataclass(frozen=True)
+class Characters:
+    name: List[str] = field(default_factory=_default_character_names)
+
+def _initialize_character_counts() -> Counter:
+    return Counter()
+
+@dataclass
+class UserDeck(InitialDeck):
+    _character_counts: Counter = field(default_factory=_initialize_character_counts)
+    _max_cards_per_character: int = 3
 
     def add_card(self, card: Card) -> None:
         self.cards.append(card)
+
+        self._check_validity()
 
     def remove_card(self, card: Card) -> None:
         if card in self.cards:
             self.cards.remove(card)
 
-    def get_card_by_index(self, index) -> Card:
-        return self.cards[index]
+        self._check_validity()
 
-    def export_cards(self, filename: str) -> None:
-        data = []
+    def _check_validity(self) -> bool:
+        deck_characters = []
+
         for card in self.cards:
-            stats = card.stats.__dict__
-            mood = card.mood.__dict__
-            training = card.training.__dict__
+            deck_characters.append(card.character)
 
-            card_dict = {
-                "name": card.name,
-                "character": card.character,
-                "rarity": card.rarity,
-                "stats": stats,
-                "mood": mood,
-                "training": training,
-            }
+        self._character_counts = Counter(deck_characters)
 
-            data.append(card_dict)
+        self._check_all_chars()
+        self._check_max_chars()
 
-        with open(filename, "w", encoding="utf-8") as write_card_file:
-            json.dump(data, write_card_file, default=lambda x: x.__dict__)
+    def _check_all_chars(self) -> None:
+        CHARACTERS = Characters().name
 
-    def import_cards(self, filename: str) -> None:
-        with open(filename, "r", encoding="utf-8") as read_card_file:
-            file = json.load(read_card_file)
+        for char in CHARACTERS:
+            if char not in self._character_counts.keys():
+                raise ValueError(
+                    f"{char} not found. You may have tried to delete all instances of a character from your deck."
+                )
 
-        cards = []
-
-        for item in file:
-            stats_attr = item["stats"]
-            mood_attr = item["mood"]
-            training_attr = item["training"]
-
-            card = Card(
-                name=item["name"],
-                character=item["character"],
-                rarity=item["rarity"],
-                stats_dict=stats_attr,
-                mood_dict=mood_attr,
-                training_dict=training_attr,
-            )
-
-            cards.append(card)
+    def _check_max_chars(self) -> None:
+        for char, count in self._character_counts.items():
+            if count > self._max_cards_per_character:
+                raise ValueError(
+                    f"More than 3 cards for {char} found. You may have tried to add a 4th card of a character to your deck."
+                )
