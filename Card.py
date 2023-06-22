@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Literal
 from collections import Counter
 
 
@@ -186,3 +186,7 @@ class UserDeck(InitialDeck):
                 raise ValueError(
                     f"More than 3 cards for {char} found. You may have tried to add a 4th card of a character to your deck."
                 )
+    
+    def calculate_stat(self, stat: Literal['smile', 'pure', 'cool', 'mental', 'bp']) -> int:
+        return sum(getattr(card, stat) for card in self.cards)
+    
