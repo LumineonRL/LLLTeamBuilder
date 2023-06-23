@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from typing import List, Literal
+from typing import List
 from collections import Counter
 
 
@@ -32,7 +32,31 @@ class Card(Stats, Mood, Training):
     name: str = ""
     character: str = ""
     rarity: str = ""
-    
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "character": self.character,
+            "rarity": self.rarity,
+            "stats": {
+                "smile": self.smile,
+                "pure": self.pure,
+                "cool": self.cool,
+                "mental": self.mental,
+                "bp": self.bp,
+            },
+            "mood": {
+                "style_type": self.style_type,
+                "mood": self.mood
+            },
+            "training": {
+                "level": self.level,
+                "uncaps": self.uncaps,
+                "appeal_level": self.appeal_level,
+                "skill_level": self.skill_level,
+            },
+        }
+
 
 @dataclass(order=True, frozen=False)
 class Deck(ABC):
@@ -45,6 +69,7 @@ class Deck(ABC):
     @abstractmethod
     def remove_card(self, card: Card) -> None:
         pass
+
 
 def _default_cards() -> List[Card]:
     return [
@@ -119,9 +144,10 @@ def _default_cards() -> List[Card]:
             bp=100,
             style_type="チアリーダー",
             mood="ニュートラル",
-        )
+        ),
     ]
-    
+
+
 @dataclass(frozen=False)
 class InitialDeck(Deck):
     cards: List[Card] = field(default_factory=_default_cards)
@@ -134,15 +160,19 @@ class InitialDeck(Deck):
     def remove_card(self, card: Card) -> None:
         pass
 
+
 def _default_character_names() -> List[str]:
     return ["日野下花帆", "林野さやか", "大沢瑠璃乃", "乙宗梢", "夕霧綴理", "藤島慈"]
+
 
 @dataclass(frozen=True)
 class Characters:
     name: List[str] = field(default_factory=_default_character_names)
 
+
 def _initialize_character_counts() -> Counter:
     return Counter()
+
 
 @dataclass
 class UserDeck(InitialDeck):
@@ -186,7 +216,6 @@ class UserDeck(InitialDeck):
                 raise ValueError(
                     f"More than 3 cards for {char} found. You may have tried to add a 4th card of a character to your deck."
                 )
-    
-    def calculate_stat(self, stat: Literal['smile', 'pure', 'cool', 'mental', 'bp']) -> int:
-        return sum(getattr(card, stat) for card in self.cards)
-    
+
+    def calculate_stat(self, stat: str) -> int:
+        return sum(getattr(card, stat) for card in self.cards if stat in vars(Stats))
