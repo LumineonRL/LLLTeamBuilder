@@ -16,7 +16,7 @@ class Stats:
 @dataclass
 class Mood:
     style_type: str = "パフォーマー"
-    mood: str = "ハッピー"
+    mood_type: str = "ハッピー"
 
 
 @dataclass
@@ -47,7 +47,7 @@ class Card(Stats, Mood, Training):
             },
             "mood": {
                 "style_type": self.style_type,
-                "mood": self.mood
+                "mood_type": self.mood_type
             },
             "training": {
                 "level": self.level,
@@ -83,7 +83,7 @@ def _default_cards() -> List[Card]:
             mental=123,
             bp=100,
             style_type="パフォーマー",
-            mood="ハッピー",
+            mood_type="ハッピー",
         ),
         Card(
             "オーロラスカイ",
@@ -95,7 +95,7 @@ def _default_cards() -> List[Card]:
             mental=123,
             bp=100,
             style_type="ムードメーカー",
-            mood="メロウ",
+            mood_type="メロウ",
         ),
         Card(
             "オーロラスカイ",
@@ -107,7 +107,7 @@ def _default_cards() -> List[Card]:
             mental=153,
             bp=100,
             style_type="トリックスター",
-            mood="ニュートラル",
+            mood_type="ニュートラル",
         ),
         Card(
             "オーロラスカイ",
@@ -119,7 +119,7 @@ def _default_cards() -> List[Card]:
             mental=123,
             bp=100,
             style_type="チアリーダー",
-            mood="ハッピー",
+            mood_type="ハッピー",
         ),
         Card(
             "オーロラスカイ",
@@ -131,7 +131,7 @@ def _default_cards() -> List[Card]:
             mental=123,
             bp=100,
             style_type="ムードメーカー",
-            mood="メロウ",
+            mood_type="メロウ",
         ),
         Card(
             "オーロラスカイ",
@@ -143,7 +143,7 @@ def _default_cards() -> List[Card]:
             mental=133,
             bp=100,
             style_type="チアリーダー",
-            mood="ニュートラル",
+            mood_type="ニュートラル",
         ),
     ]
 

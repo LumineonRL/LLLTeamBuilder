@@ -1,0 +1,134 @@
+[
+    {
+        "name": "オーロラスカイ",
+        "character": "日野下花帆",
+        "rarity": "R",
+        "stats": {
+            "smile": 1225,
+            "pure": 1525,
+            "cool": 925,
+            "mental": 123,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "パフォーマー",
+            "mood_type": "ハッピー"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    },
+    {
+        "name": "オーロラスカイ",
+        "character": "林野さやか",
+        "rarity": "R",
+        "stats": {
+            "smile": 1225,
+            "pure": 1025,
+            "cool": 1425,
+            "mental": 123,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "ムードメーカー",
+            "mood_type": "メロウ"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    },
+    {
+        "name": "オーロラスカイ",
+        "character": "大沢瑠璃乃",
+        "rarity": "R",
+        "stats": {
+            "smile": 1525,
+            "pure": 1125,
+            "cool": 725,
+            "mental": 153,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "トリックスター",
+            "mood_type": "ニュートラル"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    },
+    {
+        "name": "オーロラスカイ",
+        "character": "乙宗梢",
+        "rarity": "R",
+        "stats": {
+            "smile": 1525,
+            "pure": 1225,
+            "cool": 925,
+            "mental": 123,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "チアリーダー",
+            "mood_type": "ハッピー"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    },
+    {
+        "name": "オーロラスカイ",
+        "character": "夕霧綴理",
+        "rarity": "R",
+        "stats": {
+            "smile": 1225,
+            "pure": 925,
+            "cool": 1525,
+            "mental": 123,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "ムードメーカー",
+            "mood_type": "メロウ"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    },
+    {
+        "name": "オーロラスカイ",
+        "character": "藤島慈",
+        "rarity": "R",
+        "stats": {
+            "smile": 1125,
+            "pure": 1525,
+            "cool": 925,
+            "mental": 133,
+            "bp": 100
+        },
+        "mood": {
+            "style_type": "チアリーダー",
+            "mood_type": "ニュートラル"
+        },
+        "training": {
+            "level": 1,
+            "uncaps": 0,
+            "appeal_level": 1,
+            "skill_level": 1
+        }
+    }
+]
