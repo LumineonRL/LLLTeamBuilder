@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from typing import List
 from collections import Counter
 
-
 @dataclass
 class Stats:
     smile: int = 0
@@ -29,9 +28,20 @@ class Training:
 
 @dataclass
 class Card(Stats, Mood, Training):
+    _id: int = 0
     name: str = ""
     character: str = ""
     rarity: str = ""
+    
+    @property
+    def id(self) -> int:
+        return self._id
+
+    @id.setter
+    def id(self, new_id: int):
+        assert isinstance(new_id, int) and new_id > 0,\
+            "Card ID must be a positive integer."
+        self._id = new_id
 
 
 @dataclass(order=True, frozen=False)
@@ -47,86 +57,15 @@ class Deck(ABC):
         pass
 
 
-def _default_cards() -> List[Card]:
-    return [
-        Card(
-            "オーロラスカイ",
-            "日野下花帆",
-            "R",
-            smile=1225,
-            pure=1525,
-            cool=925,
-            mental=123,
-            bp=100,
-            style_type="パフォーマー",
-            mood_type="ハッピー",
-        ),
-        Card(
-            "オーロラスカイ",
-            "林野さやか",
-            "R",
-            smile=1225,
-            pure=1025,
-            cool=1425,
-            mental=123,
-            bp=100,
-            style_type="ムードメーカー",
-            mood_type="メロウ",
-        ),
-        Card(
-            "オーロラスカイ",
-            "大沢瑠璃乃",
-            "R",
-            smile=1525,
-            pure=1125,
-            cool=725,
-            mental=153,
-            bp=100,
-            style_type="トリックスター",
-            mood_type="ニュートラル",
-        ),
-        Card(
-            "オーロラスカイ",
-            "乙宗梢",
-            "R",
-            smile=1525,
-            pure=1225,
-            cool=925,
-            mental=123,
-            bp=100,
-            style_type="チアリーダー",
-            mood_type="ハッピー",
-        ),
-        Card(
-            "オーロラスカイ",
-            "夕霧綴理",
-            "R",
-            smile=1225,
-            pure=925,
-            cool=1525,
-            mental=123,
-            bp=100,
-            style_type="ムードメーカー",
-            mood_type="メロウ",
-        ),
-        Card(
-            "オーロラスカイ",
-            "藤島慈",
-            "R",
-            smile=1125,
-            pure=1525,
-            cool=925,
-            mental=133,
-            bp=100,
-            style_type="チアリーダー",
-            mood_type="ニュートラル",
-        ),
-    ]
+def _initial_cards() -> List[Card]:
+    pass
+    #initial_cards = JsonCardDataLoader("Data/initial_cards.json")
+    #return initial_cards.read_json()
 
 
 @dataclass(frozen=False)
 class InitialDeck(Deck):
-    cards: List[Card] = field(default_factory=_default_cards)
+    cards: List[Card] = field(default_factory=_initial_cards)
 
     @abstractmethod
     def add_card(self, card: Card) -> None:
