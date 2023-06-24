@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import List
 from collections import Counter
+from DataLoader import JsonCardDataLoader
 
 @dataclass
 class Stats:
@@ -42,6 +43,25 @@ class Card(Stats, Mood, Training):
         assert isinstance(new_id, int) and new_id > 0,\
             "Card ID must be a positive integer."
         self._id = new_id
+        
+class CardLoader:
+
+      @staticmethod  
+      def create_card_from_id(card_id:int)-> Card :
+          card_data=JsonCardDataLoader.get_card_data()
+          
+          if not card_data or not isinstance(card_data,list):
+              raise ValueError('Invalid data format')
+              
+          for c in card_data:
+              if 'id' in c and c['id']==card_id:
+                  # Create a dictionary that maps keys to values from the found object. 
+                  # This will ignore any additional fields present.
+                  fields_dict={k:v for k,v in c.items() if hasattr(Card,k)}
+                  
+                  return Card(**fields_dict)
+
+          raise ValueError(f"No matching cards with provided id {card_id}")
 
 
 @dataclass(order=True, frozen=False)
