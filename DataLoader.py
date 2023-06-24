@@ -10,11 +10,11 @@ class JsonDataLoader(ABC):
 
     @abstractmethod
     def read_json(self) -> dict:
-        pass
+        raise NotImplementedError("read_json() method not implemented.")
 
     @abstractmethod
     def write_json(self, data: dict):
-        pass
+        raise NotImplementedError("write_json() method not implemented.")
 
 
 class JsonCardDataLoader(JsonDataLoader):
@@ -26,10 +26,34 @@ class JsonCardDataLoader(JsonDataLoader):
             return card_object_list
 
     def write_json(self, data: List[Card]):
-        cards = [card.to_dict() for card in data]
+        cards = [self._convert_card_object_to_card_dict(card) for card in data]
 
         with open(self.file_path, "w", encoding="utf-8") as file:
             json.dump(cards, file, indent=4, ensure_ascii=False)
+            
+    def _convert_card_object_to_card_dict(self, card: Card) -> dict:
+        return {
+            "name": card.name,
+            "character": card.character,
+            "rarity": card.rarity,
+            "stats": {
+                "smile": card.smile,
+                "pure": card.pure,
+                "cool": card.cool,
+                "mental": card.mental,
+                "bp": card.bp,
+            },
+            "mood": {
+                "style_type": card.style_type,
+                "mood_type": card.mood_type
+            },
+            "training": {
+                "level": card.level,
+                "uncaps": card.uncaps,
+                "appeal_level": card.appeal_level,
+                "skill_level": card.skill_level,
+            },
+        }
             
     def _convert_card_dict_to_card_object(self, raw_card_data: Dict[str, Any]) -> List[Card]:
         cards = [

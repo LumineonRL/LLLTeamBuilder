@@ -33,30 +33,6 @@ class Card(Stats, Mood, Training):
     character: str = ""
     rarity: str = ""
 
-    def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "character": self.character,
-            "rarity": self.rarity,
-            "stats": {
-                "smile": self.smile,
-                "pure": self.pure,
-                "cool": self.cool,
-                "mental": self.mental,
-                "bp": self.bp,
-            },
-            "mood": {
-                "style_type": self.style_type,
-                "mood_type": self.mood_type
-            },
-            "training": {
-                "level": self.level,
-                "uncaps": self.uncaps,
-                "appeal_level": self.appeal_level,
-                "skill_level": self.skill_level,
-            },
-        }
-
 
 @dataclass(order=True, frozen=False)
 class Deck(ABC):
