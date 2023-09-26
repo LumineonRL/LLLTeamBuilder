@@ -1,4 +1,4 @@
-from mobile_game_abstracts import Card
+from mobile_game_abstracts import Card, Deck
 from dataclasses import dataclass
 
 @dataclass
@@ -21,3 +21,12 @@ class LLLLCard(Card):
         assert isinstance(new_id, int) and new_id > 0,\
             "Card ID must be a positive integer."
         self._id = new_id
+
+@dataclass(order=True, frozen=False)
+class LLLLDeck(Deck):
+    def add_card(self, card: Card) -> None:
+        self.cards.append(card)
+        
+    def remove_card(self, card: Card) -> None:
+        if card in self.cards:
+            self.cards.remove(card)
