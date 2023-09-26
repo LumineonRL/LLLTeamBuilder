@@ -135,6 +135,8 @@ if __name__ == "__main__":
     counts = Counter(character_counts)
 
     print(counts)
+    
+    my_deck.cards.
 
     # Get all the names of cards in our collection and print them out.
     # print(my_cards_collection.get_card_names())

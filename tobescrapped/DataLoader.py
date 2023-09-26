@@ -33,6 +33,7 @@ class JsonCardDataLoader(JsonDataLoader):
             
     def _convert_card_object_to_card_dict(self, card: Card) -> dict:
         return {
+            "id": card.id,
             "name": card.name,
             "character": card.character,
             "rarity": card.rarity,
@@ -58,6 +59,7 @@ class JsonCardDataLoader(JsonDataLoader):
     def _convert_card_dict_to_card_object(self, raw_card_data: Dict[str, Any]) -> List[Card]:
         cards = [
             Card(
+                id=d['id'],
                 name=d['name'],
                 character=d['character'],
                 rarity=d['rarity'],
@@ -77,6 +79,7 @@ class JsonCardDataLoader(JsonDataLoader):
 if __name__ == "__main__":
     INITIAL_CARDS = [
         Card(
+            id=1,
             name="オーロラスカイ",
             character="日野下花帆",
             rarity="R",
@@ -89,6 +92,7 @@ if __name__ == "__main__":
             mood_type="ハッピー",
         ),
         Card(
+            id=2,
             name="オーロラスカイ",
             character="林野さやか",
             rarity="R",
@@ -101,6 +105,7 @@ if __name__ == "__main__":
             mood_type="メロウ",
         ),
         Card(
+            id=3,
             name="オーロラスカイ",
             character="大沢瑠璃乃",
             rarity="R",
@@ -113,6 +118,7 @@ if __name__ == "__main__":
             mood_type="ニュートラル",
         ),
         Card(
+            id=4,
             name="オーロラスカイ",
             character="乙宗梢",
             rarity="R",
@@ -125,6 +131,7 @@ if __name__ == "__main__":
             mood_type="ハッピー",
         ),
         Card(
+            id=5,
             name="オーロラスカイ",
             character="夕霧綴理",
             rarity="R",
@@ -137,6 +144,7 @@ if __name__ == "__main__":
             mood_type="メロウ",
         ),
         Card(
+            id=6,
             name="オーロラスカイ",
             character="藤島慈",
             rarity="R",
@@ -155,9 +163,9 @@ if __name__ == "__main__":
     card_loader = JsonCardDataLoader("Data/initial_cards.json")
     card_loader.write_json(INITIAL_CARDS)
     
-    load_test = card_loader.read_json()
+    #load_test = card_loader.read_json()
     
-    print([card.smile for card in load_test])
+    #print([card.smile for card in load_test])
     
     
 
