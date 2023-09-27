@@ -1,16 +1,28 @@
-from mobile_game_abstracts import Card, Deck
+from mobile_game_abstracts import Character, Card, Deck
 from dataclasses import dataclass
 
 @dataclass
-class LLLLCard(Card):
+class LLLLCharacter(Character):
     name: str
-    character: str
-    rarity: str
-    smile: int
-    pure: int
-    cool: int
-    mental: int
-    bp: int
+
+@dataclass
+class LLLLCard(Card):
+    @dataclass
+    class LLLLCardMetadata(Card.CardMetadata):
+        name: str
+        character: Character   
+ 
+    @dataclass
+    class LLLLStats(Card.Stat):
+        smile: int
+        pure: int
+        cool: int
+        mental: int
+        bp: int
+    
+    _id: int
+    metadata: LLLLCardMetadata
+    stats: LLLLStats
     
     @property
     def id(self) -> int:

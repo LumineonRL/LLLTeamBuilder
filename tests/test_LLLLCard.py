@@ -6,38 +6,42 @@ import os
 package_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(package_dir)
 
-from LLLL_cards import LLLLCard, LLLLDeck
+from LLLL_cards import LLLLCharacter, LLLLCard, LLLLDeck
 
-class LLLLCardTests(unittest.TestCase):
+class TestCharacter(unittest.TestCase):
+    def test_character_name(self):
+        character = LLLLCharacter(name="John")
+        self.assertEqual(character.name, "John")
+
+# WIP
+class TestCard(unittest.TestCase):
     def setUp(self):
-        self.card = LLLLCard(1, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
+        self.character = LLLLCharacter(name="John")
+        self.metadata = LLLLCard.LLLLCardMetadata(name="Card 1", character=self.character)
+        self.stats = LLLLCard.LLLLStats(smile=80, pure=90, cool=85, mental=75, bp=200)
+        self.card = LLLLCard(_id=1, metadata=self.metadata, stats=self.stats)
 
-    def test_id(self):
+    def test_card_id(self):
         self.assertEqual(self.card.id, 1)
 
-    def test_name(self):
-        self.assertEqual(self.card.name, "Card Name")
+    def test_card_metadata(self):
+        self.assertEqual(self.card.metadata.name, "Card 1")
+        self.assertEqual(self.card.metadata.character.name, "John")
 
-    def test_character(self):
-        self.assertEqual(self.card.character, "Character Name")
+    def test_card_stats(self):
+        self.assertEqual(self.card.stats.smile, 80)
+        self.assertEqual(self.card.stats.pure, 90)
+        self.assertEqual(self.card.stats.cool, 85)
+        self.assertEqual(self.card.stats.mental, 75)
+        self.assertEqual(self.card.stats.bp, 200)
 
-    def test_rarity(self):
-        self.assertEqual(self.card.rarity, "Rare")
+    def test_set_card_id(self):
+        self.card.id = 2
+        self.assertEqual(self.card.id, 2)
 
-    def test_smile(self):
-        self.assertEqual(self.card.smile, 100)
-
-    def test_pure(self):
-        self.assertEqual(self.card.pure, 80)
-
-    def test_cool(self):
-        self.assertEqual(self.card.cool, 90)
-
-    def test_mental(self):
-        self.assertEqual(self.card.mental, 120)
-
-    def test_bp(self):
-        self.assertEqual(self.card.bp, 100)
+    def test_set_card_id_invalid(self):
+        with self.assertRaises(AssertionError):
+            self.card.id = -1
         
 class DeckTests(unittest.TestCase):
     def test_add_card(self):

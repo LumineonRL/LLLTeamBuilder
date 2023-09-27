@@ -3,15 +3,30 @@ from dataclasses import dataclass
 from typing import List
 
 @dataclass
+class Character(ABC):
+    name: str
+
+@dataclass
 class Card(ABC):
+    @dataclass
+    class CardMetadata(ABC):
+        name: str
+        character: Character
+    
+    @dataclass
+    class Stat(ABC):
+        pass
+    
     _id: int
+    metadata: CardMetadata
+    stats: Stat
 
     @abstractmethod
-    def id(self) -> int:
+    def get_id(self) -> int:
         pass
 
     @abstractmethod
-    def id(self, new_id: int):
+    def set_id(self, new_id: int):
         pass
     
 @dataclass(order=True, frozen=False)
