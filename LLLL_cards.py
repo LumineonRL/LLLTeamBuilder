@@ -29,7 +29,7 @@ class LLLLCard(Card):
         return self._id
     
     @id.setter
-    def id(self, new_id: int):
+    def id(self, new_id: int) -> None:
         assert isinstance(new_id, int) and new_id > 0,\
             "Card ID must be a positive integer."
         self._id = new_id

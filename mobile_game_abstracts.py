@@ -21,12 +21,14 @@ class Card(ABC):
     metadata: CardMetadata
     stats: Stat
 
+    # Implementation should use @property
     @abstractmethod
-    def get_id(self) -> int:
+    def id(self) -> int:
         pass
-
+    
+    # Implementation should use @id.setter
     @abstractmethod
-    def set_id(self, new_id: int):
+    def id(self, new_id: int) -> None:
         pass
     
 @dataclass(order=True, frozen=False)
