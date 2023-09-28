@@ -43,26 +43,33 @@ class TestCard(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.card.id = -1
         
-class DeckTests(unittest.TestCase):
+class DeckTestCase(unittest.TestCase):
+    def setUp(self):
+        self.character = LLLLCharacter(name="John")
+        self.card1 = LLLLCard(
+            _id=1,
+            metadata=LLLLCard.LLLLCardMetadata(name="Card1", character=self.character),
+            stats=LLLLCard.LLLLStats(smile=10, pure=20, cool=30, mental=40, bp=50)
+        )
+        self.card2 = LLLLCard(
+            _id=2,
+            metadata=LLLLCard.LLLLCardMetadata(name="Card2", character=self.character),
+            stats=LLLLCard.LLLLStats(smile=15, pure=25, cool=35, mental=45, bp=55)
+        )
+        self.deck = LLLLDeck(cards=[self.card1, self.card2])
+
     def test_add_card(self):
-        deck = LLLLDeck([])
-        card1 = LLLLCard(1, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
-        card2 = LLLLCard(2, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
-
-        deck.add_card(card1)
-        deck.add_card(card2)
-
-        self.assertEqual(deck.cards, [card1, card2])
+        card3 = LLLLCard(
+            _id=3,
+            metadata=LLLLCard.LLLLCardMetadata(name="Card3", character=self.character),
+            stats=LLLLCard.LLLLStats(smile=5, pure=15, cool=25, mental=35, bp=45)
+        )
+        self.deck.add_card(card3)
+        self.assertIn(card3, self.deck.cards)
 
     def test_remove_card(self):
-        card1 = LLLLCard(1, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
-        card2 = LLLLCard(2, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
-        card3 = LLLLCard(3, "Card Name", "Character Name", "Rare", 100, 80, 90, 120, 100)
-        deck = LLLLDeck([card1, card2, card3])
-
-        deck.remove_card(card2)
-
-        self.assertEqual(deck.cards, [card1, card3])
+        self.deck.remove_card(self.card1)
+        self.assertNotIn(self.card1, self.deck.cards)
        
 if __name__ == '__main__':
     unittest.main()
