@@ -37,8 +37,15 @@ class LLLLCard(Card):
 @dataclass(order=True, frozen=False)
 class LLLLDeck(Deck):
     def add_card(self, card: Card) -> None:
+        if not self._is_new_card_unique(Card.id):
+            raise ValueError(f"Card with ID {Card.id} already exists in the deck")
         self.cards.append(card)
         
     def remove_card(self, card: Card) -> None:
         if card in self.cards:
             self.cards.remove(card)
+            
+    def _is_new_card_unique(self, new_id: Card.id) -> bool:
+        if any(existing_card.id == new_id for existing_card in self.cards):
+            return False
+        return True

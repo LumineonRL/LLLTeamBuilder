@@ -70,6 +70,16 @@ class DeckTestCase(unittest.TestCase):
     def test_remove_card(self):
         self.deck.remove_card(self.card1)
         self.assertNotIn(self.card1, self.deck.cards)
+        
+    def test_add_duplicate_card(self):
+        card4 = LLLLCard(
+            _id=2,
+            metadata=LLLLCard.LLLLCardMetadata(name="Card4", character=self.character),
+            stats=LLLLCard.LLLLStats(smile=5, pure=15, cool=25, mental=35, bp=45)
+        )
+        with self.assertRaises(ValueError):
+            self.deck.add_card(card4)
+        
        
 if __name__ == '__main__':
     unittest.main()
