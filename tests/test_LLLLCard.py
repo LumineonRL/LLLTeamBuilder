@@ -13,7 +13,6 @@ class TestCharacter(unittest.TestCase):
         character = LLLLCharacter(name="John")
         self.assertEqual(character.name, "John")
 
-# WIP
 class TestCard(unittest.TestCase):
     def setUp(self):
         self.character = LLLLCharacter(name="John")

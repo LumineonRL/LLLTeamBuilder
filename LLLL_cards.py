@@ -1,3 +1,4 @@
+from typing import List
 from mobile_game_abstracts import Character, Card, Deck
 from dataclasses import dataclass
 
@@ -49,3 +50,22 @@ class LLLLDeck(Deck):
         if any(existing_card.id == new_id for existing_card in self.cards):
             return False
         return True
+
+# WIP
+@dataclass
+class InitialDeck:
+    cards: List[LLLLCard]
+    deck: LLLLDeck
+
+    def __post_init__(self):
+        self.cards = self._create_initial_cards()
+        self.deck = self._create_initial_deck()
+
+    def _create_initial_cards(self) -> List[LLLLCard]:
+        cards = []
+
+        return cards
+
+    def _create_initial_deck(self) -> LLLLDeck:
+        deck = LLLLDeck(self.cards)
+        return deck
